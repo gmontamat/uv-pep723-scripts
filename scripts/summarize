@@ -18,7 +18,7 @@ if not transcript.strip():
     print("No transcript provided via stdin.", file=sys.stderr)
     sys.exit(1)
 
-# Load .env file for OpenAI API key and Azure settings
+# Load .env file for Azure AI deployment settings
 load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".env"))
 api_key = os.getenv("AZURE_API_KEY")
 azure_endpoint = os.getenv("AZURE_ENDPOINT")
