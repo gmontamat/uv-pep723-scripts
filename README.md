@@ -9,10 +9,9 @@ post: [Fun with uv and PEP 723](https://www.cottongeeks.com/articles/2025-06-24-
 - Install [uv](https://docs.astral.sh/uv/getting-started/installation/).
 - Use an `.env` file for specific environment variables, for example:
     ```env
-    AZURE_API_KEY=...
-    AZURE_ENDPOINT=https://<base-url>.openai.azure.com/
-    AZURE_API_VERSION=2024-12-01-preview
-    DEPLOYMENT_NAME=...
+    OPENAI_API_KEY=...
+    OPENAI_BASE_URL=...  # optional
+    MODEL_NAME=...  # optional, defaults to `gpt-4o`
     ```
 - Copy the scripts to ~/.local/bin/ or any other directory in your `PATH`.
 

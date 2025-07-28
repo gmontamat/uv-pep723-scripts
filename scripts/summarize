@@ -9,8 +9,9 @@
 
 import sys
 import os
+
 from dotenv import load_dotenv
-from openai import AzureOpenAI
+import openai
 
 # Read transcript from stdin
 transcript = sys.stdin.read()
@@ -18,26 +19,19 @@ if not transcript.strip():
     print("No transcript provided via stdin.", file=sys.stderr)
     sys.exit(1)
 
-# Load .env file for Azure AI deployment settings
+# Load .env file for OpenAI API key
 load_dotenv(dotenv_path=os.path.join(os.getcwd(), ".env"))
-api_key = os.getenv("AZURE_API_KEY")
-azure_endpoint = os.getenv("AZURE_ENDPOINT")
-api_version = os.getenv("AZURE_API_VERSION")
-deployment_name = os.getenv("DEPLOYMENT_NAME")
+api_key = os.getenv("OPENAI_API_KEY")
+base_url = os.getenv("OPENAI_BASE_URL", "")
+model_name = os.getenv("OPENAI_MODEL", "gpt-4o")
 
 if not api_key:
-    print("AZURE_API_KEY not found in .env file.", file=sys.stderr)
+    print("OPENAI_API_KEY not found in .env file.", file=sys.stderr)
     sys.exit(1)
 
-if not (azure_endpoint and deployment_name and api_version):
-    print("For Azure, BASE_URL, OPENAI_API_VERSION, and DEPLOYMENT_NAME must be set in .env.", file=sys.stderr)
-    sys.exit(1)
-
-client = AzureOpenAI(
-    api_key=api_key,
-    azure_endpoint=azure_endpoint,
-    api_version=api_version,
-)
+openai.api_key = api_key
+if base_url:
+    openai.api_base = base_url
 
 # Prepare prompt for summarization
 prompt = (
@@ -46,8 +40,8 @@ prompt = (
 )
 
 try:
-    response = client.chat.completions.create(
-        model=deployment_name,
+    response = openai.chat.completions.create(
+        model=model_name,
         messages=[
             {"role": "system", "content": "You are a helpful assistant that summarizes transcripts."},
             {"role": "user", "content": prompt}
